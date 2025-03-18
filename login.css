@@ -1,0 +1,91 @@
+/* Set the background image and ensure it's full-screen */
+body {
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    background-image: url('Downpic.cc-684413089.jpg'); /* Replace with your image path */
+    background-size: cover;
+    background-position: center;
+    font-family: Arial, sans-serif;
+    color: white;
+}
+
+/* Center the form within the body */
+form {
+    background-color: rgba(0, 0, 0, 0.7); /* Black background with opacity */
+    width: 300px;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    margin: 0 auto;
+    margin-top: 100px;
+}
+
+/* Style labels and input fields */
+form label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+form input[type="text"], 
+form input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* Style the login button */
+form input[type="button"] {
+    width: 100%;
+    padding: 10px;
+    background-color: #333;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+/* Change button color on hover */
+form input[type="button"]:hover {
+    background-color: #555;
+}
+
+/* Navigation bar styling */
+.nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.7);
+    padding: 20px;
+}
+
+.nav img {
+    height: 40px; /* Adjust logo size */
+}
+
+.nav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: 20px;
+}
+
+.nav ul li {
+    display: inline;
+}
+
+.nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+}
+
+.nav ul li a:hover {
+    color: #bbb;
+}
