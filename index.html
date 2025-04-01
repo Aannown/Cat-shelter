@@ -3,51 +3,195 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Website</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Computer Guessing Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 20px;
+            background-color: black; /* Set background color to black */
+            color: white; /* Set text color to white for better contrast */
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(4, 100px); /* 4 columns with each 100px wide */
+            grid-template-rows: repeat(4, 100px);    /* 4 rows with each 100px high */
+            gap: 10px;
+            justify-content: center;
+            margin: 20px;
+            transition: background-color 0.3s ease; /* Smooth color transition */
+        }
+
+        .grid-item {
+            width: 100px;
+            height: 100px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 20px;
+            border: 2px solid #fff; /* White border for contrast */
+            color: white;
+            font-weight: bold;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin: 10px;
+            background-color: #4caf50; /* Green background for buttons */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #45a049; /* Darker green when hovering over button */
+        }
+
+        #game-status {
+            margin-top: 20px;
+        }
+
+        #feedback {
+            font-size: 18px;
+            font-weight: bold;
+            color: #ffeb3b; /* Bright yellow for feedback text */
+        }
+
+        #reset-btn {
+            background-color: #ff5722; /* Bright red for reset button */
+        }
+
+        #reset-btn:hover {
+            background-color: #e64a19; /* Darker red when hovering over reset button */
+        }
+    </style>
 </head>
 <body>
-    <header class="header">
-        <h1>Our Website</h1>
-    </header>
-    <nav class="nav">
-        <img src="cat-logo.png" alt="Logo">
-        <ul>
-            <li><a href="#home">Home</a></li>
-            <li><a href="#about">About</a></li>
-            <li><a href="#services">Services</a></li>
-            <li><a href="#contact">Contact</a></li>
-        </ul>
-    </nav>
-    <section id="hero">
-        <img src="cat-logo.png" alt="Logo">    
-    </section>
-    <section id="home" class="section home">
-        <h1>Home</h1>
-        <p>Welcome! This is our homepage where you can learn about our company and services.</p>
-    </section>
-    <section id="about" class="section about">
-        <h1>About Us</h1>
-        <p>We are a team dedicated to providing great services and helping businesses grow.</p>
-    </section>
-    <section id="services" class="section services">
-        <h1>Services</h1>
-        <p>We offer various services to help your business, including consulting and support.</p>
-    </section>
-    <section id="contact" class="section contact">
-        <h1>Contact Us</h1>
-        <div class="profile">
-            <img src="profile.jpg" alt="Profile Photo" class="profile-photo">
-            <p>Hi, I'm Rosh Andriele Bautista, your point of contact. Feel free to reach out to me for any inquiries. I'm here to help!</p>
-        </div>
-        <div class="profile">
-            <img src="profile.jpg" alt="Profile Photo" class="profile-photo">
-            <p>Hi, I'm Mark Jovan Gicos, your point of contact. Feel free to reach out to me for any inquiries. I'm here to help!</p>
-        </div>
-        <p>If you have questions, feel free to contact us through phone or email.</p>
-    </section>
-    <footer class="footer">
-        <p>All Rights Reserved 2025</p>
-    </footer>
+    <h1>Computer Guessing Game</h1>
+    
+    <h3>Think of a number between 1 and 16</h3>
+
+    <h3>Grid:</h3>
+    <div id="grid-container" class="grid-container">
+        <!-- The grid will be filled dynamically -->
+    </div>
+
+    <div id="game-status">
+        <p>Chances left: <span id="chances">5</span></p>
+        <button id="yes-btn" onclick="makeGuess(true)">Yes</button>
+        <button id="no-btn" onclick="makeGuess(false)">No</button>
+        <button id="reset-btn" onclick="resetGame()" style="display:none;">Reset Game</button>
+    </div>
+
+    <div id="feedback"></div> <!-- For displaying feedback -->
+
+    <script>
+        let userNumber = Math.floor(Math.random() * 16) + 1;  // Random number for the user (1-16)
+        let chancesLeft = 5;
+        let possibleNumbers = Array.from({ length: 16 }, (_, i) => i + 1); // List of numbers from 1 to 16
+        let gridNumbers = [];
+
+        // Generate a random color
+        function getRandomColor() {
+            const letters = '0123456789ABCDEF';
+            let color = '#';
+            for (let i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        }
+
+        // Generate the 4x4 grid based on the current possible numbers
+        function generateGrid() {
+            gridNumbers = [];
+            let selectedNumbers = [];
+
+            // Pick 16 unique numbers randomly from the possible numbers list
+            while (selectedNumbers.length < 16) {
+                let num = possibleNumbers[Math.floor(Math.random() * possibleNumbers.length)];
+                if (!selectedNumbers.includes(num)) {
+                    selectedNumbers.push(num);
+                }
+            }
+
+            // Display the grid with numbers
+            gridNumbers = selectedNumbers;
+            displayGrid(gridNumbers);
+        }
+
+        // Display the grid with numbers
+        function displayGrid(numbers) {
+            let gridContainer = document.getElementById('grid-container');
+            gridContainer.innerHTML = '';  // Clear any previous grid
+            numbers.forEach(num => {
+                let div = document.createElement('div');
+                div.className = 'grid-item';
+                div.textContent = num;
+                gridContainer.appendChild(div);
+            });
+
+            // Apply a random background color to the entire grid (not individual cells)
+            gridContainer.style.backgroundColor = getRandomColor();
+        }
+
+        // Handle the guess (Yes/No)
+        function makeGuess(isYes) {
+            let feedback = document.getElementById('feedback');
+            
+            // If "Yes", keep only the numbers that are in the current grid
+            if (isYes) {
+                feedback.innerText = "The computer is narrowing down possibilities.";
+                // Keep only numbers in the current grid
+                possibleNumbers = possibleNumbers.filter(num => gridNumbers.includes(num));
+            } else {
+                feedback.innerText = "The computer is eliminating possibilities.";
+                // Remove all numbers that are in the grid
+                possibleNumbers = possibleNumbers.filter(num => !gridNumbers.includes(num));
+            }
+
+            chancesLeft--;
+            document.getElementById('chances').innerText = chancesLeft;
+
+            if (chancesLeft <= 0) {
+                makeFinalGuess();
+            } else {
+                generateGrid();  // Generate a new grid based on the updated possible numbers
+            }
+        }
+
+        // After the last chance, the computer will make its final guess
+        function makeFinalGuess() {
+            let feedback = document.getElementById('feedback');
+            feedback.innerText = "Game Over! The computer couldn't guess your number.";
+
+            // After the last chance, make the final guess (computer guesses based on remaining possible numbers)
+            let finalGuess = possibleNumbers[Math.floor(Math.random() * possibleNumbers.length)];
+            feedback.innerText = `The computer guesses your number is: ${finalGuess}`;
+
+            document.getElementById('yes-btn').style.display = 'none';
+            document.getElementById('no-btn').style.display = 'none';
+            document.getElementById('reset-btn').style.display = 'inline-block';
+        }
+
+        // Reset the game
+        function resetGame() {
+            chancesLeft = 5;
+            userNumber = Math.floor(Math.random() * 16) + 1; // New random number for the user
+            possibleNumbers = Array.from({ length: 16 }, (_, i) => i + 1); // Reset possible numbers to 1-16
+            document.getElementById('chances').innerText = chancesLeft;
+            document.getElementById('yes-btn').style.display = 'inline-block';
+            document.getElementById('no-btn').style.display = 'inline-block';
+            document.getElementById('reset-btn').style.display = 'none';
+            generateGrid();  // Start a new game with a fresh grid
+            document.getElementById('feedback').innerText = ''; // Clear feedback
+        }
+
+        // Initialize the game
+        generateGrid();  // Display the first grid
+    </script>
 </body>
 </html>
